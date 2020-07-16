@@ -1,17 +1,19 @@
 class Traveler {
-    constructor (name, food, isHealthy) {
+    constructor(name) {
         this.name = name
         this.food = 1
-        this.isHealthy =  true
+        this.isHealthy = true
     }
 
-    hunt () {
-        this.food + 2
+    hunt() {
+        this.food = this.food + 2
     }
 
-    eat () {
-        this.food - 1
-        if(this.food <= 0) {
+    eat() {
+
+        if (this.food > 0) {
+            this.food = this.food - 1
+        } else {
             this.isHealthy = false
         }
     }
@@ -35,37 +37,54 @@ class Traveler {
 
 
 class Wagon {
-    constructor(capacity, passengers){
-        this.capacity = 2
+    constructor(capacity, passengers) {
+        this.capacity = capacity
         this.passengers = []
     }
 
     getAvailableSeatCount() {
-        this.capacity - this.passengers
+        return this.capacity - this.passengers.length
     }
 
     join(Traveler) {
-        this.capacity + 1
-        if(this.capacity > 2) {
-            this.capacity = 2
+        if (this.getAvailableSeatCount() > 0) {
+            this.passengers.push(Traveler)
         }
-        this.passengers.push(Traveler)
 
-        
+
+
+
     }
 
     shouldQuarantine() {
-        if(this.isHealthy === true) {
-            return false
-        }
+        for (let index = 0; index < this.passengers.length; index++) {
+            const currentPassenger = this.passengers[index];
 
-        else {
-            return true
+            if (currentPassenger.isHealthy === false) {
+                return true
+            }
+
+
         }
+        return false
+
+
+
     }
 
     totalFood() {
-        this.food + this.passengers
+
+        let newTotalFood = 0
+
+        for (let index = 0; index < this.passengers.length; index++) {
+            const currentPassenger = this.passengers[index];
+
+            newTotalFood = newTotalFood + currentPassenger.food
+            
+
+        }
+
+        return newTotalFood
     }
 }
 
@@ -75,15 +94,15 @@ let wagon = new Wagon(2)
 let henrietta = new Traveler('Henrietta')
 let juan = new Traveler('Juan')
 let maude = new Traveler('Maude')
-console.log(`Wagon Seat Count?: ${ wagon.getAvailableSeatCount() } – EXPECTED: 2. The wagon starts with 2 seats. We haven't added travelers to the wagon yet.`)
+console.log(`Wagon Seat Count?: ${wagon.getAvailableSeatCount()} – EXPECTED: 2. The wagon starts with 2 seats. We haven't added travelers to the wagon yet.`)
 wagon.join(henrietta)
-console.log(`Wagon Seat Count?: ${ wagon.getAvailableSeatCount() } – EXPECTED: 1. Henrietta just joined.`)
+console.log(`Wagon Seat Count?: ${wagon.getAvailableSeatCount()} – EXPECTED: 1. Henrietta just joined.`)
 wagon.join(juan)
 wagon.join(maude)  // There is no room for her!
-console.log(`Wagon Seat Count?: ${ wagon.getAvailableSeatCount() } – EXPECTED: 0 – There is no room for Maude, but Juan was able to join.`)
+console.log(`Wagon Seat Count?: ${wagon.getAvailableSeatCount()} – EXPECTED: 0 – There is no room for Maude, but Juan was able to join.`)
 henrietta.hunt()   // Henrietta goes in search of food.
 juan.eat()         // Juan eats – as Juan does. 🤣
 juan.eat()         // Juan has run out of food!
 console.log(juan)
-console.log(`Wagon Should Quarantine?: ${ wagon.shouldQuarantine() } – EXPECTED: true. Juan has run out of food and become unhealthy!`)
-console.log(`Wagon's Total Food?: ${ wagon.totalFood() } – EXPECTED: 3.`)
+console.log(`Wagon Should Quarantine?: ${wagon.shouldQuarantine()} – EXPECTED: true. Juan has run out of food and become unhealthy!`)
+console.log(`Wagon's Total Food?: ${wagon.totalFood()} – EXPECTED: 3.`)
